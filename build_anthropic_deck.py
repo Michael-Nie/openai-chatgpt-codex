@@ -279,39 +279,38 @@ def loop_cycle(slide, cx, cy, R, nodes, center_paras, node_w, node_h,
                Emu(cd), Emu(cd), fill=accent)
     fill_text(cc, center_paras)
 
+def figcap(slide, x, y, w, num, title, source):
+    """Sell-side-report style figure caption: 图N: title  /  资料来源: ..."""
+    tb_text(slide, x, y, w, Inches(0.42), [
+        {"runs": [{"t": num + ": ", "size": 8.5, "color": CLAY, "bold": True},
+                  {"t": title, "size": 8.5, "color": INK, "bold": True}], "space_after": 1},
+        {"t": "资料来源: " + source, "size": 7.5, "color": GRAY},
+    ])
+
 # ============================================================ SLIDE 1 — OVERVIEW
 def slide1():
-    s = prs.slides.add_slide(BLANK)
-    rect(s, 0, 0, SW, SH, WHITE)
-    # cover-style header band
-    rect(s, 0, 0, SW, Inches(1.62), BG)
-    rect(s, 0, 0, Inches(0.20), Inches(1.62), CLAY)
-    tb, tf = textbox(s, Inches(0.55), Inches(0.16), Inches(12.4), Inches(1.4))
-    p = tf.paragraphs[0]; style(p, "ANTHROPIC 技术洞察  ·  STRATEGIC × AGENT CO-EVOLUTION", 11.5, CLAYL, bold=True, space_after=3)
-    p = tf.add_paragraph(); style(p, "Agent 时代的“自举飞轮”", 30, WHITE, bold=True, space_after=2)
-    p = tf.add_paragraph()
-    style(p, "战略定位 × Agent 能力的协同演化　|　From Coding Agent to Organizational OS", 13, LGRAY)
-
-    # thesis strip
-    th = rect(s, 0, Inches(1.62), SW, Inches(0.62), CLAYL)
-    rect(s, 0, Inches(1.62), Inches(0.20), Inches(0.62), CLAY)
+    s = content_slide("01 · STRATEGIC × AGENT CO-EVOLUTION", "战略定位演进 × Agent 能力协同演化", 2,
+                      note="图1: Anthropic 定位四段迁移 × Agent 能力协同演化 · 资料来源: Anthropic 官方公告、Claude Code / Agent SDK / MCP 文档,本研究整理")
+    # thesis one-liner band
+    th = rrect(s, Inches(0.55), Inches(1.26), Inches(12.23), Inches(0.50), CLAYL, radius=0.06)
+    rect(s, Inches(0.55), Inches(1.26), Inches(0.10), Inches(0.50), CLAY)
     fill_text(th, [{"runs": [
-        {"t": "核心论点　", "size": 12, "color": CLAYD, "bold": True},
+        {"t": "核心论点　", "size": 11, "color": CLAYD, "bold": True},
         {"t": "定位四段迁移 = Agent 能力逐级上移,同一条协同演化曲线;领先本质 = 速度系统 + Agent 协同演化能力,而非单点模型分数。",
-         "size": 12, "color": INK, "bold": False}]}],
+         "size": 11, "color": INK}]}],
         anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.LEFT)
 
     # --- four-stage timeline ---
-    section_label(s, Inches(0.55), Inches(2.42), Inches(6), "四段定位迁移  ×  Agent 能力重心  (Co-evolution Timeline)")
+    section_label(s, Inches(0.55), Inches(1.94), Inches(7), "四段定位迁移  ×  Agent 能力重心  (Co-evolution Timeline)")
     stages = [
         ("01", "安全研究实验室", "Safety Lab", "2021–23", "Chat 调用", "对齐研究 / RLHF / 宪法式 AI;模型即「被调用的对话能力」"),
         ("02", "前沿模型 / 企业 API", "Frontier Model / API", "2024–25", "Tool Use", "Claude 3/3.5/4 + API;模型学会调用工具,能力开始「外接世界」"),
         ("03", "Agent 平台", "Agent Platform", "2025", "Claude Code 自主 Agent", "Agent Loop + Sub-agents + MCP;模型自主执行多步任务"),
         ("04", "组织操作系统", "Organizational OS", "2025末–26", "动态编排 / 托管多 Agent", "Dynamic Workflows + Managed Agents;AI 造 AI,编排成组 Agent"),
     ]
-    x0 = Inches(0.55); top = Inches(2.78); gap = Inches(0.22)
+    x0 = Inches(0.55); top = Inches(2.34); gap = Inches(0.22)
     cw = (Inches(12.23) - gap * 3) / 4
-    ch = Inches(1.18)
+    ch = Inches(1.14)
     for i, (num, cn, en, yr, cap, capdesc) in enumerate(stages):
         cx = x0 + (cw + gap) * i
         # stage card
@@ -328,27 +327,29 @@ def slide1():
             ymid = top + Emu(int(ch / 2))
             connector(s, cx + cw + Emu(int(gap*0.10)), ymid, cx + cw + gap - Emu(int(gap*0.10)), ymid, color=CLAY, w=2.25)
         # capability layer card (below)
-        capy = top + ch + Inches(0.16)
-        cap_card = rrect(s, cx, capy, cw, Inches(0.92), SLATEL, line=None, radius=0.06)
-        rect(s, cx, capy, Inches(0.06), Inches(0.92), SLATE)
-        tb_text(s, cx + Inches(0.14), capy + Inches(0.08), cw - Inches(0.24), Inches(0.80), [
+        capy = top + ch + Inches(0.14)
+        cap_card = rrect(s, cx, capy, cw, Inches(0.90), SLATEL, line=None, radius=0.06)
+        rect(s, cx, capy, Inches(0.06), Inches(0.90), SLATE)
+        tb_text(s, cx + Inches(0.14), capy + Inches(0.08), cw - Inches(0.24), Inches(0.78), [
             {"runs": [{"t": "▸ Agent 重心: ", "size": 9, "color": SLATE, "bold": True},
                       {"t": cap, "size": 10, "color": INK, "bold": True}], "space_after": 2},
             {"t": capdesc, "size": 8.5, "color": GRAY, "space_after": 0},
         ])
 
     # axis hint (right-aligned, in the section-label row)
-    tb_text(s, Inches(8.5), Inches(2.42), Inches(4.28), Inches(0.26),
+    tb_text(s, Inches(8.5), Inches(1.94), Inches(4.28), Inches(0.26),
             [{"t": "自主性 / 托管度逐级上移  ▸▸▸", "size": 9, "color": CLAY, "bold": True, "align": PP_ALIGN.RIGHT}])
+    figcap(s, Inches(0.55), Inches(4.58), Inches(9.5), "图1",
+           "Anthropic 定位四段迁移 × Agent 能力协同演化", "Anthropic 官方公告、Claude Code 文档,本研究整理")
 
     # --- three trends ---
-    section_label(s, Inches(0.55), Inches(5.40), Inches(6), "三条贯穿趋势  (Through-lines)")
+    section_label(s, Inches(0.55), Inches(5.14), Inches(6), "三条贯穿趋势  (Through-lines)")
     trends = [
         ("①", "自主度上移", ["人写脚本", "模型编排", "自主执行"]),
         ("②", "执行形态延伸", ["前台 harness", "异步/后台", "托管多 Agent"]),
         ("③", "护城河迁移", ["model score", "Agent Runtime", "+ 协议生态(MCP)"]),
     ]
-    ty = Inches(5.78); tcw = (Inches(12.23) - Inches(0.4) * 2) / 3
+    ty = Inches(5.50); tcw = (Inches(12.23) - Inches(0.4) * 2) / 3
     for i, (num, lab, steps) in enumerate(trends):
         tx = Inches(0.55) + (tcw + Inches(0.4)) * i
         box = rrect(s, tx, ty, tcw, Inches(1.06), WHITE, line=LGRAY, line_w=0.75, radius=0.05)
@@ -357,9 +358,6 @@ def slide1():
                            {"t": lab, "size": 12.5, "color": INK, "bold": True}]}])
         arrow_progression(s, tx + Inches(0.16), ty + Inches(0.56), tcw - Inches(0.32), steps,
                           h=Inches(0.34), size=8.5)
-    footer(s, 1, DEFAULT_NOTE)
-
-slide1()
 
 # ============================================================ extra diagram helpers
 def callout_card(slide, x, y, w, h, title, lines, accent=CLAY, fill=CARD,
@@ -443,8 +441,8 @@ def bar_chart(slide, x, y, w, h, bars, ymax):
 
 # ============================================================ SLIDE 2 — STACK & PARADIGM
 def slide2():
-    s = content_slide("STACK & PARADIGM · 能力谱系三轴", "Anthropic Agent 栈与能力范式:可控可验证的 Runtime", 2,
-                      note="来源:Anthropic《How AI Is Transforming Work at Anthropic》(2025-12) · Claude Code / Agent SDK / MCP / Managed Agents 官方文档")
+    s = content_slide("02 · STACK & PARADIGM · 能力谱系三轴", "Anthropic Agent 栈与能力范式:可控可验证的 Runtime", 3,
+                      note="图2: Agent 能力谱系三轴与 Claude Code Runtime · 资料来源: Claude Code / Agent SDK / Managed Agents 文档;指标引自《How AI Is Transforming Work at Anthropic》(2025-12) ·〔强〕")
     # ---- left column: three-axis capability spectrum
     section_label(s, Inches(0.55), Inches(1.28), Inches(6), "能力谱系三轴  ·  Capability Spectrum")
     LX, LW = Inches(0.55), Inches(6.05)
@@ -491,8 +489,8 @@ def slide2():
 
 # ============================================================ SLIDE 3 — FLYWHEEL
 def slide3():
-    s = content_slide("THE BOOTSTRAPPING FLYWHEEL · AI building AI", "自举飞轮:编码是 AI 造 AI 的高可信闭环", 3,
-                      note="框架:早期可测加速,非自主递归自我改进(RSI) · 来源:Anthropic《How AI Is Transforming Work at Anthropic》(2025-12)、《When AI builds itself》(Anthropic Institute, 2026-06)")
+    s = content_slide("03 · THE BOOTSTRAPPING FLYWHEEL · AI building AI", "自举飞轮:编码是 AI 造 AI 的高可信闭环", 4,
+                      note="图4: 自举飞轮与内部研究证据 · 资料来源: Anthropic《How AI Is Transforming Work at Anthropic》(2025-12)、《When AI builds itself》(2026-06) · 框架: 早期可测加速,非自主 RSI")
     # ---- left: flywheel
     section_label(s, Inches(0.55), Inches(1.28), Inches(5.6), "自举飞轮  ·  Bootstrapping Flywheel")
     nodes = ["模型变强", "Claude Code 变强", "内部研发提速", "真实反馈回流", "反哺下一代模型"]
@@ -543,12 +541,15 @@ def slide3():
 
 # ============================================================ SLIDE 4 — EXPANSION
 def slide4():
-    s = content_slide("EXPANSION · 可验证性是外扩速度的瓶颈变量", "从 Coding Agent 到通用知识工作 Agent", 4,
-                      note="来源:Anthropic Claude Cowork(2026-01 研究预览)、Agent Skills / 插件、Claude Code 与 Agent SDK 文档 ·〔向〕外扩节奏为方向性判断")
+    s = content_slide("04 · EXPANSION · 可验证性是外扩速度的瓶颈变量", "从 Coding Agent 到通用知识工作 Agent", 5,
+                      note="图5: 共享栈与编码→通用知识工作外扩 · 资料来源: Anthropic Claude Cowork(2026-01)、Agent Skills/插件、Claude Code/Agent SDK 文档 ·〔向〕外扩节奏为方向性判断")
     section_label(s, Inches(0.55), Inches(1.28), Inches(11), "迁移逻辑:编码可验证性最高 → 先突破 → 再外扩")
     arrow_progression(s, Inches(0.55), Inches(1.70), Inches(12.23),
                       ["编码:可验证性最高", "打穿楔子(先突破)", "共享栈复用", "外扩通用知识工作"],
                       h=Inches(0.48), size=11.5, fill=CLAYL, fg=CLAYD)
+    tb_text(s, Inches(0.55), Inches(2.20), Inches(12.23), Inches(0.22),
+            [{"runs": [{"t": "图5: ", "size": 8, "color": CLAY, "bold": True},
+                       {"t": "编码楔子 → 平台外扩路径(高价值任务 = 端到端自主闭环) · 资料来源: 本研究整理、NVIDIA GTC 场景分层", "size": 8, "color": GRAY}]}])
     # left: carriers
     LX, LW = Inches(0.55), Inches(6.02)
     callout_card(s, LX, Inches(2.46), LW, Inches(1.28), "载体 ① Cowork", [
@@ -579,42 +580,49 @@ def slide4():
 
 # ============================================================ SLIDE 5 — ENTERPRISE GTM
 def slide5():
-    s = content_slide("ENTERPRISE GO-TO-MARKET · 卖 Token → 卖组织提速", "面向 ToB 的布局与动作", 5,
-                      note="来源:Anthropic 官方公告与财报报道 ·〔强〕2024 末 ~$1B run-rate;后续为多方报道/厂商口径〔中〕,引用前对照官方")
+    s = content_slide("05 · ENTERPRISE GO-TO-MARKET · 卖 Token → 卖组织提速", "面向 ToB 的布局与动作", 6,
+                      note="图6: Anthropic 年化收入轨迹与 B 端市场地位 · 资料来源: The Information、Menlo Ventures、Ramp、国泰海通证券(2026-05-30) ·〔强〕2024末~$1B;余为报道/券商口径〔中〕")
     # left: revenue chart
-    section_label(s, Inches(0.55), Inches(1.28), Inches(5), "总营收 run-rate(年化, $B)")
-    bar_chart(s, Inches(0.95), Inches(1.95), Inches(4.20), Inches(2.55), [
+    section_label(s, Inches(0.55), Inches(1.28), Inches(5.4), "年化收入(ARR)轨迹(估计, $B)")
+    bar_chart(s, Inches(0.98), Inches(1.92), Inches(4.25), Inches(1.66), [
         ("2024 末", 1, "$1B", CLAY, "〔强〕"),
-        ("2025 中", 4.5, "$4–5B", SLATE, "〔中〕"),
         ("2025 末", 9, "$9B", SLATE, "〔中〕"),
-        ("2026-02", 14, "$14B", SLATE, "〔中·报道〕"),
-    ], ymax=15.5)
-    callout_card(s, Inches(0.55), Inches(5.02), Inches(5.05), Inches(1.62), "商业化主轴", [
-        {"t": "API-first:约 80% 营收来自 API + 企业/开发者(非消费 App)。", "size": 9.4},
-        {"t": "Claude Code 成营收主轴:GA(2025-05)后约 6 个月达 ~$1B run-rate。", "size": 9.4},
-        {"t": "模式迁移:卖 Token → 卖「组织提速」。", "size": 9.4, "color": CLAY, "bold": True},
-    ], accent=CLAY, title_size=11.5)
-    # right: three action stacks
+        ("2026 Q1", 14, "$14B", SLATE, "〔中〕"),
+        ("2026 ARR", 30, "~$30B", CLAYD, "〔中·券商〕"),
+    ], ymax=33)
+    figcap(s, Inches(0.58), Inches(4.06), Inches(5.0), "图6", "Anthropic 年化收入轨迹(多源口径)",
+           "The Information、国泰海通证券(2026-05-30)")
+    callout_card(s, Inches(0.55), Inches(4.50), Inches(5.05), Inches(2.14), "B 端经济学:高价值任务驱动", [
+        {"t": "约 25% 高价值场景创造约 80% 收入(NVIDIA GTC 场景分层)。", "size": 9.2},
+        {"t": "单用户变现 ≈ OpenAI 的 8×;企业 API 份额 12%(2023)→40%(2025)居首。", "size": 9.2},
+        {"t": "Ramp:美企 Anthropic 占(A+O)AI 支出 60–65%;新增采购 73%→Anthropic。", "size": 9.2},
+        {"t": "年付费 >$1M 企业客户 500(2026-02)→1000(2026-04)。", "size": 9.2},
+    ], accent=CLAY, title_size=11)
+    # right: action stacks
     RX, RW = Inches(5.85), Inches(6.93)
-    callout_card(s, RX, Inches(1.32), RW, Inches(1.72), "企业级动作 · Enterprise", [
-        {"t": "Claude for Enterprise(2024-09):500K 上下文 · SSO/RBAC/SCIM/审计 · 不用客户数据训练。", "size": 9.3},
-        {"t": "HIPAA-ready(BAA 点选即用)· 医疗与生命科学(Life Sciences 2025-10 / Healthcare 2026-01)。", "size": 9.3},
-        {"t": "金融:Claude for Financial Services(2025-07,Moody's/S&P/FactSet 连接器)· Managed Agents 企业托管。", "size": 9.3},
+    callout_card(s, RX, Inches(1.28), RW, Inches(1.58), "企业级动作 · Enterprise", [
+        {"t": "Claude for Enterprise(2024-09):500K 上下文 · SSO/RBAC/SCIM/审计 · 不用客户数据训练。", "size": 9.2},
+        {"t": "HIPAA-ready(BAA)· 医疗与生命科学(2025-10 / 2026-01)· 金融(2025-07)。", "size": 9.2},
+        {"t": "Managed Agents 企业级托管 · 行业专精角色 Agent。", "size": 9.2},
     ], accent=CLAY, title_size=11.5)
-    callout_card(s, RX, Inches(3.16), RW, Inches(1.50), "开发者 · 生态", [
-        {"t": "Agent SDK(原 Claude Code SDK,2025-09 更名):内部框架 → 可编程外部能力。", "size": 9.3},
-        {"t": "MCP 开放协议(2024-11 开源;2025-03 OpenAI 采用;2025-12 入 Linux Foundation)。", "size": 9.3},
-        {"t": "插件 / Agent Skills 生态:角色与连接器即插即用。", "size": 9.3},
+    callout_card(s, RX, Inches(2.98), RW, Inches(1.46), "开发者 · 生态", [
+        {"t": "Agent SDK(原 Claude Code SDK,2025-09 更名):内部框架 → 可编程外部能力。", "size": 9.2},
+        {"t": "MCP 开放协议(2024-11;2025-03 OpenAI 采用;2025-12 入 Linux Foundation)。", "size": 9.2},
+        {"t": "插件 / Agent Skills 生态:角色与连接器即插即用。", "size": 9.2},
     ], accent=SLATE, title_size=11.5)
-    callout_card(s, RX, Inches(4.78), RW, Inches(1.36), "信任即准入 · Trust = Access", [
-        {"t": "RSP / System Cards / Transparency Hub —— 把安全可信做成 ToB 差异化卖点,而非成本。", "size": 9.3},
-        {"t": "分发多入口:终端 / IDE / API / MCP / 插件,单次改进多界面释放。", "size": 9.3, "color": GRAY},
+    callout_card(s, RX, Inches(4.56), RW, Inches(1.20), "信任即准入 · Trust = Access", [
+        {"t": "RSP / System Cards / Transparency Hub —— 安全可信作 ToB 差异化卖点,而非成本。", "size": 9.2},
+        {"t": "分发多入口:终端/IDE/API/MCP/插件,单次改进多界面释放。", "size": 9.2, "color": GRAY},
     ], accent=CLAY, title_size=11.5)
+    band = rrect(s, RX, Inches(5.88), RW, Inches(0.62), BG, radius=0.06)
+    fill_text(band, [{"runs": [{"t": "模式迁移　", "size": 11, "color": CLAYL, "bold": True},
+                               {"t": "卖 Token → 卖「组织提速」:价值随高价值任务的完成度计量。", "size": 11, "color": WHITE}]}],
+              anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.CENTER)
 
 # ============================================================ SLIDE 6 — SAFETY & CONTROLLABILITY
 def slide6():
-    s = content_slide("SAFETY & CONTROLLABILITY · 边界条件,而非刹车", "Agent 安全与可控性:治理即 Runtime", 6,
-                      note="来源:Anthropic 责任扩展政策(RSP, 2023-09 起)、System Cards、Transparency Hub(2026)· ASL-3 安全措施于 2025-05 随 Claude Opus 4 启用")
+    s = content_slide("06 · SAFETY & CONTROLLABILITY · 边界条件,而非刹车", "Agent 安全与可控性:治理即 Runtime", 7,
+                      note="图7: 治理即 Runtime 与人在环责任链 · 资料来源: Anthropic RSP(2023-09 起)、System Cards、Transparency Hub(2026)· ASL-3 安全措施 2025-05 随 Claude Opus 4 启用")
     # top banner: new risk surface
     band = rrect(s, Inches(0.55), Inches(1.30), Inches(12.23), Inches(0.72), CLAYL, radius=0.06)
     rect(s, Inches(0.55), Inches(1.30), Inches(0.10), Inches(0.72), CLAY)
@@ -654,35 +662,40 @@ def slide6():
 
 # ============================================================ SLIDE 7 — OUTLOOK & SIGNPOSTS
 def slide7():
-    s = content_slide("OUTLOOK & SIGNPOSTS", "未来展望与信号灯", 7,
-                      note="信号灯颜色为方向性判断:绿=已现/在轨 · 黄=进行中/待观察 ·〔向〕")
+    s = content_slide("07 · OUTLOOK & SIGNPOSTS", "未来展望与信号灯", 8,
+                      note="图8: 可跟踪信号灯 · 资料来源: Anthropic、Menlo Ventures/Ramp、The Information、TicketTrends、国泰海通证券(2026-05-30) · 颜色为方向性判断")
     LX, LW = Inches(0.55), Inches(6.02)
     RX, RW = Inches(6.76), Inches(6.02)
-    callout_card(s, LX, Inches(1.30), LW, Inches(1.84), "技术拐点 · 趋势延伸", [
-        {"t": "把「可验证 Agent 闭环」从编码外推到更广知识工作。", "size": 10},
-        {"t": "自主度 / 托管度继续上移 —— 后台、长程、多 Agent。", "size": 10},
-        {"t": "Dynamic Workflows:可达千级并行子 Agent(2026-05)。", "size": 10, "color": GRAY},
+    callout_card(s, LX, Inches(1.28), LW, Inches(1.80), "技术拐点 · 趋势延伸", [
+        {"t": "把「可验证 Agent 闭环」从编码外推到更广知识工作。", "size": 9.8},
+        {"t": "自主度 / 托管度继续上移 —— 后台、长程、多 Agent。", "size": 9.8},
+        {"t": "Dynamic Workflows:可达千级并行子 Agent(2026-05)。", "size": 9.8, "color": GRAY},
     ], accent=CLAY, title_size=12.5)
-    callout_card(s, RX, Inches(1.30), RW, Inches(1.84), "风险边界", [
-        "质量债:自主度↑ 而验证 / 监督不同步",
-        "技能退化:人类对底层能力的掌控弱化",
-        "算力依赖 · 弱可验证领域的瓶颈",
+    callout_card(s, RX, Inches(1.28), RW, Inches(1.80), "风险边界", [
+        "质量债:自主度↑ 而验证/监督不同步;技能退化、弱可验证领域瓶颈",
+        {"runs": [{"t": "▸ ", "size": 9.8, "color": AMBER, "bold": True},
+                  {"t": "算力约束:已现 Claude Code 限流/分层(2026-04);锁定 ~12.3GW vs OpenAI 激进扩张", "size": 9.8, "color": INK}]},
+        {"runs": [{"t": "▸ ", "size": 9.8, "color": AMBER, "bold": True},
+                  {"t": "竞品追赶:Codex 下载量 2026-04 反超 Claude Code(GPT-5.5 接入)", "size": 9.8, "color": INK}]},
     ], accent=AMBER, title_size=12.5)
     # signpost dashboard
-    section_label(s, Inches(0.55), Inches(3.34), Inches(11), "信号灯(可跟踪) · Signposts")
+    section_label(s, Inches(0.55), Inches(3.24), Inches(11), "信号灯(可跟踪) · Signposts")
     posts = [
-        ("①", "连续动作 / 自主度", "9.8→21.2 已现,持续观察", GREEN),
-        ("②", "MCP 生态规模", "入 Linux Foundation,跨厂商采用", GREEN),
-        ("③", "Agent SDK 采用", "内部框架→外部可编程", AMBER),
-        ("④", "Cowork / 企业 Agent 渗透", "2026-01 研究预览,待放量", AMBER),
-        ("⑤", "托管多 Agent 形态", "Managed Agents Beta / 动态编排", AMBER),
+        ("①", "连续动作 / 自主度", "9.8→21.2 已现", GREEN),
+        ("②", "MCP 生态规模", "入 Linux Foundation", GREEN),
+        ("③", "企业 API 份额", "40% 居首;Ramp 60–65%", GREEN),
+        ("④", "Cowork / 企业 Agent", "2026-01 预览,待放量", AMBER),
+        ("⑤", "算力锁定 & 竞品", "~12.3GW;Codex 反超", AMBER),
     ]
     pw = (Inches(12.23) - Inches(0.20) * 4) / 5
-    px = Inches(0.55); py = Inches(3.72)
+    px = Inches(0.55); py = Inches(3.60)
     for i, (num, title, status, col) in enumerate(posts):
-        signpost(s, px + (pw + Inches(0.20)) * i, py, pw, Inches(1.34), num, title, status, col)
+        signpost(s, px + (pw + Inches(0.20)) * i, py, pw, Inches(1.30), num, title, status, col)
+    figcap(s, Inches(0.55), Inches(4.98), Inches(9.5), "图8",
+           "可跟踪信号灯(自主度 / 生态 / 份额 / 渗透 / 算力·竞品)",
+           "Anthropic、Menlo/Ramp、The Information、TicketTrends、国泰海通(2026-05-30)")
     # conclusion banner
-    band = rrect(s, Inches(0.55), Inches(5.42), Inches(12.23), Inches(1.18), CLAY, radius=0.06)
+    band = rrect(s, Inches(0.55), Inches(5.46), Inches(12.23), Inches(1.16), CLAY, radius=0.06)
     fill_text(band, [
         {"runs": [{"t": "结论回扣　", "size": 13, "color": WHITE, "bold": True},
                   {"t": "领先本质 = 速度系统 + Agent 协同演化能力", "size": 13, "color": WHITE, "bold": True}], "space_after": 3},
@@ -690,7 +703,61 @@ def slide7():
          "size": 11, "color": WHITE},
     ], anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.CENTER)
 
-slide2(); slide3(); slide4(); slide5(); slide6(); slide7()
+# ============================================================ COVER / 导读 (page 1)
+def slide_cover():
+    s = prs.slides.add_slide(BLANK)
+    rect(s, 0, 0, SW, SH, WHITE)
+    # cover banner
+    rect(s, 0, 0, SW, Inches(1.92), BG)
+    rect(s, 0, 0, Inches(0.22), Inches(1.92), CLAY)
+    tb, tf = textbox(s, Inches(0.6), Inches(0.24), Inches(9.5), Inches(1.6))
+    p = tf.paragraphs[0]; style(p, "ANTHROPIC 技术洞察  ·  深度研究 (Insight Report)", 11.5, CLAYL, bold=True, space_after=4)
+    p = tf.add_paragraph(); style(p, "Agent 时代的“自举飞轮”", 32, WHITE, bold=True, space_after=3)
+    p = tf.add_paragraph(); style(p, "战略定位 × Agent 能力的协同演化　|　From Coding Agent to Organizational OS", 12.5, LGRAY)
+    # 核心判断 chip (评级-style)
+    chip = rrect(s, Inches(10.4), Inches(0.46), Inches(2.35), Inches(1.02), CLAY, radius=0.10)
+    fill_text(chip, [{"t": "核心判断 / Call", "size": 9.5, "color": CLAYL, "bold": True, "space_after": 2},
+                     {"t": "结构性领先", "size": 15, "color": WHITE, "bold": True, "space_after": 1},
+                     {"t": "边界 = 算力 × 可验证性", "size": 8.5, "color": WHITE}])
+    # 核心论点 strip
+    th = rect(s, 0, Inches(1.92), SW, Inches(0.62), CLAYL)
+    rect(s, 0, Inches(1.92), Inches(0.22), Inches(0.62), CLAY)
+    fill_text(th, [{"runs": [
+        {"t": "核心论点　", "size": 12, "color": CLAYD, "bold": True},
+        {"t": "定位四段迁移由 Agent 能力跃迁驱动并反向重塑;真正的领先是速度系统 + Agent 协同演化能力 —— 把模型沉淀进可控可验证的 Agent Runtime,并以「自举飞轮」持续放大。",
+         "size": 11, "color": INK}]}], anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.LEFT)
+    # 核心观点 (导读)
+    section_label(s, Inches(0.55), Inches(2.74), Inches(8), "核心观点 · Key Theses(本报告导读)")
+    theses = [
+        ("定位四段跃迁,每段由 Agent 能力跃迁驱动 — ",
+         "安全实验室 → 前沿模型/API → Agent 平台 → 组织操作系统(AI 造 AI);Agent 重心由 Chat 调用上移到动态编排 / 托管多 Agent。", ""),
+        ("护城河 = 速度系统 + 自举飞轮,非单点跑分 — ",
+         "把模型能力沉淀进可控可验证的 Agent Runtime;编码是高可信闭环,内部研究显示 Claude 写入 >80% 合并代码、人均每日 merged PR +67%、生产率 +50%。", "强"),
+        ("价值锚点从「用户规模」转向「高价值任务」 — ",
+         "约 25% 高价值场景创造约 80% 收入;Anthropic 单用户变现约为 OpenAI 的 8 倍,企业 API 份额 12%(2023)→40%(2025)居首。", "中·券商"),
+        ("编码楔子 → 平台外扩,可验证性是瓶颈变量 — ",
+         "Cowork 与角色插件把同一套 Model + Agent Loop + MCP 复制到通用知识工作;非编码领域可验证性弱,制约外扩速度。", ""),
+        ("边界条件:安全 × 算力 — ",
+         "RSP / System Cards / Transparency Hub 把治理做成 ToB 准入;但算力供给偏紧(已现限流/分层)与 Codex 追赶(2026-04 下载量反超)是关键风险变量。", "中"),
+    ]
+    paras = []
+    for lead, body, tg in theses:
+        runs = [{"t": "▍ ", "size": 12, "color": CLAY, "bold": True},
+                {"t": lead, "size": 11.5, "color": INK, "bold": True},
+                {"t": body, "size": 11.5, "color": INK}]
+        if tg:
+            runs.append({"t": "  〔" + tg + "〕", "size": 9, "color": GRAY, "italic": True})
+        paras.append({"runs": runs, "space_after": 9})
+    tb_text(s, Inches(0.55), Inches(3.06), Inches(12.23), Inches(3.42), paras, anchor=MSO_ANCHOR.TOP)
+    # 方法与口径 note box
+    nb = rrect(s, Inches(0.55), Inches(6.52), Inches(12.23), Inches(0.50), CARD, line=LGRAY, line_w=0.75, radius=0.05)
+    fill_text(nb, [{"runs": [
+        {"t": "方法与口径　", "size": 8.5, "color": CLAY, "bold": True},
+        {"t": "数据经多源交叉核验并按〔强/中/向〕分层标注;Anthropic 内部指标引自《How AI Is Transforming Work at Anthropic》(2025-12);市场/算力/竞品数据引自国泰海通证券《OpenAI:AI 时代的基础设施与超级入口》(2026-05-30,综合 Menlo Ventures / Ramp / The Information)。2026 年项超模型知识截止,引用前对照官方原文。",
+         "size": 7.8, "color": GRAY}]}], anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.LEFT)
+    footer(s, 1, "")
+
+slide_cover(); slide1(); slide2(); slide3(); slide4(); slide5(); slide6(); slide7()
 
 out = "/home/user/openai-chatgpt-codex/Anthropic_技术洞察_自举飞轮.pptx"
 prs.save(out)
